@@ -10,8 +10,8 @@ function PostForm({ post }) {
         useForm({
             defaultValues: {
                 title: post?.title || "",
-                slug: post?.slug || "",
-                content: post?.$id || "",
+                slug: post?.$id || "",
+                content: post?.content || "",
                 status: post?.status || "active",
             },
         });
@@ -33,6 +33,8 @@ function PostForm({ post }) {
             });
             if (dbPost) navigate(`/post/${dbPost.$id}`);
         } else {
+            console.log(data);
+
             const file = await service.uploadFile(data.image[0]);
             if (file) {
                 const fileId = file.$id;

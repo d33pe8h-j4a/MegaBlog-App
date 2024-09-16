@@ -13,16 +13,24 @@ function App() {
         authService
             .getCurrentUser()
             .then((userData) => {
-                if (userData) dispatch(login({ userData }));
-                else dispatch(logout());
+                if (userData) {
+                    // console.log("user data received");
+                    dispatch(login({ userData }));
+                } else {
+                    // console.log("user data not received");
+                    dispatch(logout());
+                }
             })
             .finally(() => setLoading(false));
+        // console.log("loading");
     }, []);
     return !loading ? (
         <div className="min-h-screen flex flex-wrap content-between bg-gray-400">
             <div className="w-full block">
                 <Header />
-                {/* <main><Outlet /></main> */}
+                <main>
+                    <Outlet />
+                </main>
                 <Footer />
             </div>
         </div>

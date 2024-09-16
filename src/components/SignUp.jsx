@@ -1,21 +1,22 @@
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import authService from "../appwrite/auth";
+import { Link, useNavigate } from "react-router-dom";
 import { login } from "../store/authSlice";
-import { Button, Input, Logo } from "./index";
+import { Button, Input, Logo } from "./index.js";
+import { useDispatch } from "react-redux";
+import { useForm } from "react-hook-form";
 
-function SignUp() {
-    const { register, handleSubmit } = useForm();
-    const [error, setError] = useState("");
+function Signup() {
     const navigate = useNavigate();
+    const [error, setError] = useState("");
     const dispatch = useDispatch();
-    const signup = async (data) => {
+    const { register, handleSubmit } = useForm();
+
+    const create = async (data) => {
         setError("");
         try {
-            const userAccount = await authService.createAccount(data);
-            if (userAccount) {
+            const userData = await authService.createAccount(data);
+            if (userData) {
                 const userData = await authService.getCurrentUser();
                 if (userData) dispatch(login(userData));
                 navigate("/");
@@ -24,9 +25,12 @@ function SignUp() {
             setError(error.message);
         }
     };
+
     return (
         <div className="flex items-center justify-center">
-            <div className="mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10">
+            <div
+                className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}
+            >
                 <div className="mb-2 flex justify-center">
                     <span className="inline-block w-full max-w-[100px]">
                         <Logo width="100%" />
@@ -47,7 +51,8 @@ function SignUp() {
                 {error && (
                     <p className="text-red-600 mt-8 text-center">{error}</p>
                 )}
-                <form onSubmit={handleSubmit(signup)}>
+
+                <form onSubmit={handleSubmit(create)}>
                     <div className="space-y-5">
                         <Input
                             label="Full Name: "
@@ -58,8 +63,8 @@ function SignUp() {
                         />
                         <Input
                             label="Email: "
-                            type="email"
                             placeholder="Enter your email"
+                            type="email"
                             {...register("email", {
                                 required: true,
                                 validate: {
@@ -89,4 +94,4 @@ function SignUp() {
     );
 }
 
-export default SignUp;
+export default Signup;
